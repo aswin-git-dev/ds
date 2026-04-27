@@ -1,7 +1,7 @@
 import cv2, os, numpy as np, matplotlib.pyplot as plt
-from tensorflow.keras import layers, models
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
+from sklearn.svm import SVC
 
 path = 'Covid19-dataset'
 classes = os.listdir(path)
@@ -13,27 +13,21 @@ plt.imshow(img, cmap='gray'); plt.show()
 img = cv2.Canny(img,100,200)
 plt.imshow(img, cmap='gray'); plt.show()
 
-X, y = [], []
+x, y = [], []
 for i,c in enumerate(classes):
     for f in os.listdir(os.path.join(path, c)):
         img = cv2.imread(os.path.join(path, c, f), 0)
         img = cv2.resize(img, (64, 64))
         img = cv2.Canny(img, 100, 200)
-        X.append(img.flatten())
+        x.append(img.flatten())
         y.append(i)
-    
-X = np.array(X)[...,None]
-y = np.eye(len(classes))[y]
 
-Xtr,Xte,Ytr,Yte = train_test_split(X,y,test_size=0.2)
+X = np.array(x)
+y = np.array(y)
 
-model = models.Sequential([
-    layers.Conv2D(8,3,activation='relu',input_shape=(64,64,1)),
-    layers.Flatten(),
-    layers.Dense(len(classes),activation='softmax')
-])
+xtrain, xtest, ytrain, ytest = train_test_split(X, y, test_size=0.2)
 
-model.compile('adam','categorical_crossentropy',metrics=['accuracy'])
-model.fit(Xtr,Ytr,epochs=5)
-ypred = np.argmax(model.predict(Xte),1) 
-print(classification_report(np.argmax(Yte,1), ypred))
+model = SVC(kernel='rbf', C=1).fit(xtrain, ytrain)
+
+ypred = model.predict(xtest)
+print(classification_report(ytest, ypred))
