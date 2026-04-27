@@ -2,6 +2,7 @@ import cv2, os, numpy as np, matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
 
 path = 'Covid19-dataset'
 classes = os.listdir(path)
@@ -22,10 +23,11 @@ for i,c in enumerate(classes):
         x.append(img.flatten())
         y.append(i)
 
-X = np.array(x)
+x=np.array(x)
+x=StandardScaler().fit_transform(x)
 y = np.array(y)
 
-xtrain, xtest, ytrain, ytest = train_test_split(X, y, test_size=0.2)
+xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.2)
 
 model = SVC(kernel='rbf', C=1).fit(xtrain, ytrain)
 

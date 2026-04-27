@@ -19,7 +19,7 @@ for i,c in enumerate(classes):
         img = cv2.imread(os.path.join(path, c, f), 0)
         img = cv2.resize(img, (64, 64))
         img = cv2.Canny(img, 100, 200)
-        X.append(img.flatten())
+        X.append(img)
         y.append(i)
     
 X = np.array(X)[...,None]
