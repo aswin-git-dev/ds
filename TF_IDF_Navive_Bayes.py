@@ -25,6 +25,7 @@ print(confusion_matrix(ypred, ytest))
 
 print("Prediction: ")
 predict=model.predict(["I dislike this product!"])
+print("Preprocessed tokens:", model.named_steps['tfidf'].build_analyzer()("I dislike this product!"))
 print(predict)
 
 

@@ -15,13 +15,13 @@ img = cv2.Canny(img,100,200)
 plt.imshow(img, cmap='gray'); plt.show()
 
 x, y = [], []
-for i,c in enumerate(classes):
+for l,c in enumerate(classes):
     for f in os.listdir(os.path.join(path, c)):
         img = cv2.imread(os.path.join(path, c, f), 0)
         img = cv2.resize(img, (64, 64))
         img = cv2.Canny(img, 100, 200)
         x.append(img.flatten())
-        y.append(i)
+        y.append(l)
 
 x=np.array(x)
 x=StandardScaler().fit_transform(x)
